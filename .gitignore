@@ -1,0 +1,10 @@
+
+# Generic Ignores
+*.lock
+*.DS_Store
+*.swp
+*.out
+
+
+# managed by npm (see package.json)
+node_modules

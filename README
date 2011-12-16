@@ -1,0 +1,74 @@
+Platform API Node Client
+=============
+
+Node.js module providing a client for the SPARC Platform REST API.
+
+Prerequisites
+-------
+
+The following software must exist on the target machine to install and run the
+SPARC Platform Node.js client.
+
+* [Git (for development only)](http://git-scm.com/) -- [install instructions](http://book.git-scm.com/2_installing_git.html)
+* [Node.js v0.6.x](http://nodejs.org/) -- [install instructions](https://github.com/joyent/node/wiki/Installation)
+* [NPM (Node Package Manager) v1.x](http://npmjs.org/) -- [install instructions](https://github.com/isaacs/npm)
+
+Getting Started (Usage)
+------------
+
+The SPARC Platform Node.js client can be installed with npm.
+
+Install from the command line:
+
+    $ cd ~/path/to/your/app
+    $ npm install git@github.com:sparcedge/platform-api-node-client.git
+
+Note: to specify a specific branch, tag, or sha to install, use the following syntax:
+
+    $ npm install git@github.com:sparcedge/platform-api-node-client.git#branch-or-tag-or-sha
+
+Alternatively, if you're registering dependencies in a `package.json` file, you can simply register the client
+as another dependency:
+
+    {
+        "name": "your-application-name",
+        ...
+        "dependencies": {
+            ...
+            // @todo: is this right?
+            "sparc-api-client": "git@github.com:sparcedge/platform-api-node-client.git" 
+            ..
+        },
+        ...
+    }
+
+Getting Started (Development)
+------------
+
+Assuming the above prerequisites have been met, the following steps may be used 
+to set up a local development environment:
+
+Clone the repository:
+
+    $ cd ~/Projects-Or-Other-Parent-Directory
+    $ git clone git@github.com:sparcedge/platform-api-node-client.git
+
+Install any module dependencies:
+
+    $ cd platform-api-node-client/
+    $ npm install
+
+Running Tests
+------------
+
+The Platform API Node Client uses the [Mocha](http://visionmedia.github.com/mocha/) JavaScript
+testing framework.  To run the tests:
+
+Install Mocha, if necessary:
+
+    $ sudo npm install -g mocha
+
+Start the test suite:
+
+    $ cd /path/to/platform-api-node-client/
+    $ mocha
