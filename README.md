@@ -13,7 +13,7 @@ SPARC Platform Node.js client.
 * [Node.js v0.6.x](http://nodejs.org/) -- [install instructions](https://github.com/joyent/node/wiki/Installation)
 * [NPM (Node Package Manager) v1.x](http://npmjs.org/) -- [install instructions](https://github.com/isaacs/npm)
 
-Getting Started (Usage)
+Getting Started (Installing)
 ------------
 
 The SPARC Platform Node.js client can be installed with npm.
