@@ -5,10 +5,11 @@ var assert = require('./helpers/assert'),
 var client = new Client({
 	host: 'localhost',
 	port: 3210,
-	tenant: 'sparc'
+	tenant: 'test'
 });
 
 describe('/users', function() {
+
 	describe('GET:', function() {
 		// variables that span test cases
 		var resp, body;
@@ -18,7 +19,7 @@ describe('/users', function() {
 				assert.ifError(err);
 				resp = r;
 				body = b;
-				done()
+				done();
 			});
 		});
 
@@ -26,6 +27,9 @@ describe('/users', function() {
 			assert.jsonContentType(resp.headers);
 		});
 
+		it('should return a data property with an array value', function() {
+			assert(Array.isArray(body.data));
+		});
+
 	});
 });
-
