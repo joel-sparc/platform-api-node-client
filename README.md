@@ -75,17 +75,36 @@ the same value you would supply to the `t` parameter when using the REST API dir
 
 All API methods expect the last parameter to be a callback function.  The callback should be in the form of:
 
-    function(err, resp, data) {
+    function(err, resp, body) {
         // err: an instance of Error, if one occurred (null otherwise)
         // resp: the native ClientResponse
-        // data: the response body, parsed as an object
+        // body: the response body, parsed as an object
     }
 
 ###API Methods
 
 ####GET: /users
 
-    client.users.get(<callback>);
+    client.users.get(function(err, resp, body) {
+        if (err) throw err;
+        
+        // body.data is an array of users
+    });
+
+####POST: /users
+
+    var sholmes = {
+        firstName: 'Sherlock',
+        lastName: 'Holmes',
+        username: 'sholmes',
+        password: 'password'
+    };
+    
+    client.users.post(sholmes, function(err, resp, body) {
+        if (err) throw err;
+
+        
+    });
 
 ##Running Tests (for internal developers):
 
