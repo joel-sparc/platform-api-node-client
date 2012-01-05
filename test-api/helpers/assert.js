@@ -1,5 +1,6 @@
 var assert = module.exports = require('assert');
 
 assert.jsonContentType = function(headers) {
-	assert(headers['content-type'] === 'application/json; charset=utf-8');
+	assert(headers['content-type']);
+	assert(headers['content-type'].indexOf('application/json') !== -1);
 };
