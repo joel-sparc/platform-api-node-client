@@ -156,6 +156,36 @@ one user will be returned in the data array.
         }
     }
     
+####PUT: /users/:id
+
+    var sholmes = {
+        firstName: 'Sherlock',
+        lastName: 'Holmes',
+        username: 'sholmes',
+        password: 'password'
+    };
+    
+    client.users.id(userId).put(sholmes, function(err, resp, body) {
+        if (err) throw err;
+    });
+
+*Example response body:*
+
+    {
+        data: 'none'
+    }
+    
+####DELETE: /users/:id
+    
+    client.users.id(userId).delete(function(err, resp, body) {
+        if (err) throw err;
+    });
+
+*Example response body:*
+
+    {
+        data: 'none'
+    }
 
 ##Running Tests (for internal developers):
 
