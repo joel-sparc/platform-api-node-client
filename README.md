@@ -83,7 +83,9 @@ All API methods expect the last parameter to be a callback function.  The callba
 
 ###API Methods
 
-####GET: /users
+**client.users.get(cb)**
+
+Equivalent to a `GET: /users` request.
 
     client.users.get(function(err, resp, body) {
         if (err) throw err;
@@ -98,7 +100,9 @@ All API methods expect the last parameter to be a callback function.  The callba
         ]
     }
     
-####GET: /users?username=:username&password=:password
+**client.users.get({ username, password }, cb)**
+
+Equivalent to a `GET: /users?username=:username&password=:password` request.
 
 The Platform API provides Restful verification of user passwords.  This is performed through "querying" the
 users collection with a username and password to match against.  If an empty array is returned, then the username
@@ -117,7 +121,9 @@ one user will be returned in the data array.
         ]
     }
 
-####POST: /users
+**client.users.post(user, cb)**
+
+Equivalent to a `POST: /users` request.
 
     var sholmes = {
         firstName: 'Sherlock',
@@ -139,7 +145,9 @@ one user will be returned in the data array.
         }
     }
 
-####GET: /users/:id
+**client.users.id(userId).get(cb)**
+
+Equivalent to a `GET: /users/:id` request.
 
     client.users.id(userId).get(function(err, resp, body) {
         if (err) throw err;
@@ -156,7 +164,9 @@ one user will be returned in the data array.
         }
     }
     
-####PUT: /users/:id
+**client.users.id(userId).put(user, cb)**
+
+Equivalent to a `PUT: /users/:id` request.
 
     var sholmes = {
         firstName: 'Sherlock',
@@ -175,7 +185,9 @@ one user will be returned in the data array.
         data: 'none'
     }
     
-####DELETE: /users/:id
+**client.users.id(userId).delete(cb)**
+
+Equivalent to a `DELETE: /users/:id` request.
     
     client.users.id(userId).delete(function(err, resp, body) {
         if (err) throw err;
