@@ -87,9 +87,35 @@ All API methods expect the last parameter to be a callback function.  The callba
 
     client.users.get(function(err, resp, body) {
         if (err) throw err;
-        
-        // body.data is an array of users
     });
+
+*Example response body:*
+
+    {
+        data: [
+            { /* user a */ },
+            { /* user b */ }
+        ]
+    }
+    
+####GET: /users?username=:username&password=:password
+
+The Platform API provides Restful verification of user passwords.  This is performed through "querying" the
+users collection with a username and password to match against.  If an empty array is returned, then the username
+and password combination were invalid.  If a single user is returned, then it was a valid combination.  At most,
+one user will be returned in the data array.
+
+    client.users.get({ username: 'sholmes', password: 'password' }, function(err, r, b) {
+        if (err) throw err;
+	});
+    
+*Example response body:*
+
+    {
+        data: [
+            /* zero or one user(s) here */
+        ]
+    }
 
 ####POST: /users
 
@@ -102,9 +128,34 @@ All API methods expect the last parameter to be a callback function.  The callba
     
     client.users.post(sholmes, function(err, resp, body) {
         if (err) throw err;
-
-        
     });
+
+*Example response body:*
+
+    {
+        data: {
+            _id: '4f0b038143e63a1004000062',
+            uri: '/users/4f0b038143e63a1004000062'
+        }
+    }
+
+####GET: /users/:id
+
+    client.users.id(userId).get(function(err, resp, body) {
+        if (err) throw err;
+    });
+
+*Example response body:*
+
+    {
+        data: {
+            firstName: 'Sherlock',
+            lastName: 'Holmes',
+            username: 'sholmes',
+            _id: '4f0b06b343e63a100400009b'
+        }
+    }
+    
 
 ##Running Tests (for internal developers):
 
