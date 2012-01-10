@@ -34,8 +34,7 @@ as another dependency:
         ...
         "dependencies": {
             ...
-            // @todo: is this right?
-            "platform-api-node-client": "git@github.com:sparcedge/platform-api-node-client.git" 
+            "platform-api-node-client": "git+https://github.com/sparcedge/platform-api-node-client.git"
             ..
         },
         ...
