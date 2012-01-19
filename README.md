@@ -8,6 +8,7 @@ The following software must exist on the target machine to install and run the
 SPARC Platform Node.js client.
 
 * [Git (for development only)](http://git-scm.com/) -- [install instructions](http://book.git-scm.com/2_installing_git.html)
+    * If you need help setting up your public/private RSA keys go [here](http://help.github.com/mac-set-up-git/)
 * [Node.js v0.6.x](http://nodejs.org/) -- [install instructions](https://github.com/joyent/node/wiki/Installation)
 * [NPM (Node Package Manager) v1.x](http://npmjs.org/) -- [install instructions](https://github.com/isaacs/npm)
 
