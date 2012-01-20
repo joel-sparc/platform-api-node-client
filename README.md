@@ -199,6 +199,33 @@ Equivalent to a `DELETE: /users/:id` request.
         data: 'none'
     }
 
+**client.events.post(event, cb)**
+
+Equivalent to a `POST: /events` request.
+
+    var event = {
+        timestamp: 1327093708463,
+        category: 'user',
+        data: {
+        	username: 'sholmes',
+        	action: 'login'
+        },
+        deltas: {
+        	logins: 1
+        }
+    };
+    
+    client.events.post(event, function(err, resp, body) {
+        if (err) throw err;
+    });
+
+*Example response body:*
+
+    {
+        data: 'none'
+    }
+
+
 ##Running Tests (for internal developers):
 
 Start the API server on localhost using the test-api environment:
