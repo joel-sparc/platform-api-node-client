@@ -38,12 +38,13 @@ describe('/events', function() {
 		it('should complete without any errors', function(done) {
 			client.events.post({
 				timestamp: Date.now(),
-				category: 'api-test',
+				category: 'user',
 				data: {
-					iminurlogz: 'stealin ur eventz'
+					username: 'sholmes',
+					action: 'login'
 				},
 				deltas: {
-					lolcats: 1
+					logins: 1
 				}
 			}, function(err, r, b) {
 				assert.ifError(err);
