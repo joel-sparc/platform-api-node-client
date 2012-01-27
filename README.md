@@ -21,11 +21,11 @@ The SPARC Platform Node.js client can be installed with npm.
 Install from the command line:
 
     $ cd ~/path/to/your/app
-    $ npm install git@github.com:sparcedge/platform-api-node-client.git
+    $ npm install git+https://github.com/sparcedge/platform-api-node-client.git
 
 Note: to specify a specific branch, tag, or sha to install, use the following syntax:
 
-    $ npm install git@github.com:sparcedge/platform-api-node-client.git#branch-or-tag-or-sha
+    $ npm install git+https://github.com/sparcedge/platform-api-node-client.git#branch-or-tag-or-sha
 
 Alternatively, if you're registering dependencies in a `package.json` file, you can simply register the client
 as another dependency:
@@ -35,7 +35,7 @@ as another dependency:
         ...
         "dependencies": {
             ...
-            "platform-api-node-client": "git+https://github.com/sparcedge/platform-api-node-client.git#v0.0.1"
+            "platform-api-node-client": "git+https://github.com/sparcedge/platform-api-node-client.git#v0.0.2"
             ..
         },
         ...
