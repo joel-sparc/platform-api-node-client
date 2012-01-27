@@ -9,4 +9,4 @@ clean:
 	rm -rf ./node_modules
 
 test-api:
-	$(MOCHA) -R list -t 5000 ./test-api/test-users.js ./test-api/test-events.js
+	$(MOCHA) -R list -t 5000 ./test-api/test-tenants.js ./test-api/test-users.js ./test-api/test-events.js

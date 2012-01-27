@@ -6,19 +6,17 @@ var client = new Client({
 	host: 'localhost',
 	port: 3210,
 	landlord: 'test'
-}).tenant('test');
+});
 
 // for various test cases
-var sholmes = {
-	firstName: 'Sherlock',
-	lastName: 'Holmes',
-	username: 'sholmes',
-	password: 'password'
+var scotlandyard = {
+	name: 'Scotland Yard',
+	slug: 'scotlandyard'
 },
 // set later on
-sholmesId;
+scotlandyardId;
 
-describe('/users', function() {
+describe('/tenants', function() {
 
 	// ask the server to initialize the test database before starting
 	before(function(done) {
@@ -44,7 +42,7 @@ describe('/users', function() {
 		var resp, body;
 
 		it('should complete without any errors', function(done) {
-			client.users.post(sholmes, function(err, r, b) {
+			client.tenants.post(scotlandyard, function(err, r, b) {
 				assert.ifError(err);
 				resp = r;
 				body = b;
@@ -66,7 +64,7 @@ describe('/users', function() {
 			assert(body.data.uri);
 
 			// store the _id for later use
-			sholmesId = body.data._id;
+			scotlandyardId = body.data._id;
 		});
 
 		it('should have a location header with same value as uri', function() {
@@ -80,7 +78,7 @@ describe('/users', function() {
 		var resp, body;
 
 		it('should complete without any errors', function(done) {
-			client.users.get(function(err, r, b) {
+			client.tenants.get(function(err, r, b) {
 				assert.ifError(err);
 				resp = r;
 				body = b;
@@ -100,23 +98,25 @@ describe('/users', function() {
 			assert(Array.isArray(body.data));
 		});
 
-		it('should return the posted user in the first value of the data array', function() {
-			assert.strictEqual(body.data.length, 1);
-			assert.strictEqual(body.data[0].firstName, sholmes.firstName);
+		// note: the database initialization script invoked at the start of this script
+		// automatically creates a `test` tenant record, so this test assumes that the
+		// `scotlandyard` tenant is the second record returned
+		it('should return the posted tenant in the second value of the data array', function() {
+			assert.strictEqual(body.data.length, 2);
+			assert.strictEqual(body.data[1].name, scotlandyard.name);
 		});
 
 	});
 
 });
 
-describe('/users?username=:username&password=:password', function() {
-
+describe('/tenants/:id', function() {
 	describe('GET:', function() {
 		// variables that span test cases
 		var resp, body;
 
 		it('should complete without any errors', function(done) {
-			client.users.get({ username: sholmes.username, password: sholmes.password }, function(err, r, b) {
+			client.tenants.id(scotlandyardId).get(function(err, r, b) {
 				assert.ifError(err);
 				resp = r;
 				body = b;
@@ -132,80 +132,10 @@ describe('/users?username=:username&password=:password', function() {
 			assert.strictEqual(resp.statusCode, 200);
 		});
 
-		it('should return a data property with an array value', function() {
-			assert(Array.isArray(body.data));
+		it('should return the posted tenant in the data value', function() {
+			assert.strictEqual(body.data.name, scotlandyard.name);
 		});
 
-		it('should return the correct user in the first value of the data array', function() {
-			assert.strictEqual(body.data.length, 1);
-			assert.strictEqual(body.data[0].firstName, sholmes.firstName);
-		});
-
-	});
-
-	describe('GET: (with wrong credentials)', function() {
-		// variables that span test cases
-		var resp, body;
-
-		it('should complete without any errors', function(done) {
-			client.users.get({ username: sholmes.username, password: 'wrong' }, function(err, r, b) {
-				assert.ifError(err);
-				resp = r;
-				body = b;
-				done();
-			});
-		});
-
-		it('should return a valid JSON content type', function() {
-			assert.jsonContentType(resp.headers);
-		});
-
-		it('should respond with a 200 status code', function() {
-			assert.strictEqual(resp.statusCode, 200);
-		});
-
-		it('should return a data property with an array value', function() {
-			assert(Array.isArray(body.data));
-		});
-
-		it('should return no users inside of the data array', function() {
-			assert.strictEqual(body.data.length, 0);
-		});
-
-	});
-
-});
-
-describe('/users/:id', function() {
-	describe('GET:', function() {
-		// variables that span test cases
-		var resp, body;
-
-		it('should complete without any errors', function(done) {
-			client.users.id(sholmesId).get(function(err, r, b) {
-				assert.ifError(err);
-				resp = r;
-				body = b;
-				done();
-			});
-		});
-
-		it('should return a valid JSON content type', function() {
-			assert.jsonContentType(resp.headers);
-		});
-
-		it('should respond with a 200 status code', function() {
-			assert.strictEqual(resp.statusCode, 200);
-		});
-
-		it('should return the posted user in the data value', function() {
-			assert.strictEqual(body.data.firstName, sholmes.firstName);
-		});
-
-		it('should not return the password property of the user', function() {
-			assert.strictEqual(body.data.password, undefined);
-		});
-		
 	});
 
 	describe('PUT:', function() {
@@ -214,10 +144,10 @@ describe('/users/:id', function() {
 
 		it('should complete without any errors', function(done) {
 
-			// change sherlock's username and update
-			sholmes.username = 'sherlock.holmes@sparcedge.com';
+			// change Scotland Yard's name and update
+			scotlandyard.name = 'Metropolitan Police Service, London';
 
-			client.users.id(sholmesId).put(sholmes, function(err, r, b) {
+			client.tenants.id(scotlandyardId).put(scotlandyard, function(err, r, b) {
 				assert.ifError(err);
 				resp = r;
 				body = b;
@@ -240,15 +170,15 @@ describe('/users/:id', function() {
 		var body;
 
 		it('should complete without any errors', function(done) {
-			client.users.id(sholmesId).get(function(err, r, b) {
+			client.tenants.id(scotlandyardId).get(function(err, r, b) {
 				assert.ifError(err);
 				body = b;
 				done();
 			});
 		});
 
-		it('should return the user\'s updated username', function() {
-			assert.strictEqual(body.data.username, sholmes.username);
+		it('should return the tenant\'s updated name', function() {
+			assert.strictEqual(body.data.name, scotlandyard.name);
 		});
 
 	});
@@ -258,7 +188,7 @@ describe('/users/:id', function() {
 		var resp, body;
 
 		it('should complete without any errors', function(done) {
-			client.users.id(sholmesId).delete(function(err, r, b) {
+			client.tenants.id(scotlandyardId).delete(function(err, r, b) {
 				assert.ifError(err);
 				resp = r;
 				body = b;
@@ -277,13 +207,13 @@ describe('/users/:id', function() {
 	});
 
 	// note: more robust 404 testing later on. just verifying for now that
-	// the user is indeed gone after deleting
+	// the tenant is indeed gone after deleting
 	describe('GET: (after deleting)', function() {
 		// variables that span test cases
 		var resp, body;
 
 		it('should complete without any errors', function(done) {
-			client.users.id(sholmesId).get(function(err, r, b) {
+			client.tenants.id(scotlandyardId).get(function(err, r, b) {
 				assert.ifError(err);
 				resp = r;
 				body = b;
@@ -299,13 +229,13 @@ describe('/users/:id', function() {
 
 });
 
-describe('/users/:malformed-id', function() {
+describe('/tenants/:malformed-id', function() {
 	describe('GET:', function() {
 		// variables that span test cases
 		var resp, body;
 
 		it('should complete without any errors', function(done) {
-			client.users.id('malformed').get(function(err, r, b) {
+			client.tenants.id('malformed').get(function(err, r, b) {
 				assert.ifError(err);
 				resp = r;
 				body = b;
@@ -329,13 +259,13 @@ describe('/users/:malformed-id', function() {
 	});
 });
 
-describe('/users/:404', function() {
+describe('/tenants/:404', function() {
 	describe('GET:', function() {
 		// variables that span test cases
 		var resp, body;
 
 		it('should complete without any errors', function(done) {
-			client.users.id('404040404040404040404040').get(function(err, r, b) {
+			client.tenants.id('404040404040404040404040').get(function(err, r, b) {
 				assert.ifError(err);
 				resp = r;
 				body = b;

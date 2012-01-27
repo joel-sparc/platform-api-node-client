@@ -5,15 +5,13 @@ var assert = require('./helpers/assert'),
 var client = new Client({
 	host: 'localhost',
 	port: 3210,
-	tenant: 'test'
+	landlord: 'test'
 });
 
 describe('/events', function() {
 
 	// ask the server to initialize the test database before starting
 	before(function(done) {
-		// not using the client library for this request because it automatically
-		// attaches the tenant slug, which doesn't exist yet
 		var opts = {
 			host: client.host,
 			port: client.port,
@@ -32,35 +30,68 @@ describe('/events', function() {
 		req.end();
 	});
 
-	describe('POST:', function() {
-		var resp, body;
+	describe('(tenant not specified)', function() {
 
-		it('should complete without any errors', function(done) {
-			client.events.post({
-				timestamp: Date.now(),
-				category: 'user',
-				data: {
-					username: 'sholmes',
-					action: 'login'
-				},
-				deltas: {
-					logins: 1
-				}
-			}, function(err, r, b) {
-				assert.ifError(err);
-				resp = r;
-				body = b;
-				done();
+		describe('POST:', function() {
+			var resp, body;
+
+			it('should complete without any errors', function(done) {
+				client.events.post({
+					timestamp: Date.now(),
+					category: 'user',
+					data: {
+						username: 'sholmes',
+						action: 'login'
+					},
+					deltas: {
+						logins: 1
+					}
+				}, function(err, r, b) {
+					assert.ifError(err);
+					resp = r;
+					body = b;
+					done();
+				});
+			});
+
+			it('should return a valid JSON content type', function() {
+				assert.jsonContentType(resp.headers);
+			});
+
+			it('should respond with a 201 status code', function() {
+				assert.strictEqual(resp.statusCode, 201);
 			});
 		});
 
-		it('should return a valid JSON content type', function() {
-			assert.jsonContentType(resp.headers);
-		});
+	});
 
-		it('should respond with a 201 status code', function() {
-			assert.strictEqual(resp.statusCode, 201);
+
+	describe('(tenant specified)', function() {
+
+		describe('POST:', function() {
+			var resp, body;
+
+			it('should complete without any errors', function(done) {
+				client.tenant('test').events.post({
+					timestamp: Date.now(),
+					category: 'user',
+					data: {
+						username: 'sholmes',
+						action: 'login'
+					},
+					deltas: {
+						logins: 1
+					}
+				}, function(err, r, b) {
+					assert.ifError(err);
+					resp = r;
+					body = b;
+					done();
+				});
+			});
+
 		});
+		
 	});
 
 });
