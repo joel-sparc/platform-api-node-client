@@ -64,13 +64,13 @@ Importing the API client:
     // nothing special here...
     var Client = require('platform-api-node-client');
     
-API clients are bound to a specific server host and port, and a specific client tenant.  The tenant value should be
-the same value you would supply to the `t` parameter when using the REST API directly.  E.g.,
+API clients are bound to a specific server host and port, and a specific client landlord.  The landlord value should be
+the same value you would provide for the `l` parameter when using the REST API directly.  E.g.,
 
     var client = new Client({
         host: 'localhost',
         port: 3000,
-        tenant: 'sparc'
+        landlord: 'sparc'
     });
 
 All API methods expect the last parameter to be a callback function.  The callback should be in the form of:
@@ -80,14 +80,118 @@ All API methods expect the last parameter to be a callback function.  The callba
         // resp: the native ClientResponse
         // body: the response body, parsed as an object
     }
+    
+API methods that must be scoped to a particular tenant are accessed through the client's `tenant()` method.  The value
+passed to `tenant()` should be the same value you would provide for the `t` parameter when using the REST API directly.
+E.g.,
+
+    client.tenant('mi6');
 
 ###API Methods
 
-**client.users.get(cb)**
+####Tenant Methods
+
+**client.tenants.get(cb)**
+
+Equivalent to a `GET: /tenants` request.
+
+    client.tenants.get(function(err, resp, body) {
+        if (err) throw err;
+    });
+
+*Example response body:*
+
+    {
+        data: [
+            { /* tenant a */ },
+            { /* tenant b */ }
+        ]
+    }
+
+**client.tenants.post(tenant, cb)**
+
+Equivalent to a `POST: /tenants` request.
+
+Note: the `slug` value is a unique client-provided identifier that is intended to be human-readable, and friendly
+for URL composition.  This value can then be provided in future API requests as the `t` parameter for tenant-scoped
+operations.
+
+    var mi6 = {
+        name: 'Secret Intelligence Service',
+        slug: 'mi6'
+    };
+    
+    client.tenants.post(mi6, function(err, resp, body) {
+        if (err) throw err;
+    });
+
+*Example response body:*
+
+    {
+        data: {
+            _id: '4f232bbba075e8e61d0000fc',
+            uri: '/tenants/4f232bbba075e8e61d0000fc'
+        }
+    }
+
+**client.tenants.id(tenantId).get(cb)**
+
+Equivalent to a `GET: /tenants/:id` request.
+
+    client.tenants.id(tenantId).get(function(err, resp, body) {
+        if (err) throw err;
+    });
+
+*Example response body:*
+
+    {
+        data: {
+            name: 'Secret Intelligence Service',
+            slug: 'mi6',
+            _id: '4f0b06b343e63a100400009b'
+        }
+    }
+    
+**client.tenants.id(tenantId).put(tenant, cb)**
+
+Equivalent to a `PUT: /tenants/:id` request.
+
+    var mi6 = {
+        name: 'Secret Intelligence Service',
+        slug: 'mi6'
+    };
+    
+    client.tenants.id(tenantId).put(mi6, function(err, resp, body) {
+        if (err) throw err;
+    });
+
+*Example response body:*
+
+    {
+        data: 'none'
+    }
+    
+**client.tenants.id(tenantId).delete(cb)**
+
+Equivalent to a `DELETE: /tenants/:id` request.
+    
+    client.tenants.id(tenantId).delete(function(err, resp, body) {
+        if (err) throw err;
+    });
+
+*Example response body:*
+
+    {
+        data: 'none'
+    }
+
+####User Methods
+
+**client.tenant(tenant).users.get(cb)**
 
 Equivalent to a `GET: /users` request.
 
-    client.users.get(function(err, resp, body) {
+    client.tenant('mi6').users.get(function(err, resp, body) {
         if (err) throw err;
     });
 
@@ -100,7 +204,7 @@ Equivalent to a `GET: /users` request.
         ]
     }
     
-**client.users.get({ username, password }, cb)**
+**client.tenant(tenant).users.get({ username, password }, cb)**
 
 Equivalent to a `GET: /users?username=:username&password=:password` request.
 
@@ -109,9 +213,9 @@ users collection with a username and password to match against.  If an empty arr
 and password combination were invalid.  If a single user is returned, then it was a valid combination.  At most,
 one user will be returned in the data array.
 
-    client.users.get({ username: 'sholmes', password: 'password' }, function(err, r, b) {
+    client.tenant('mi6').users.get({ username: 'jbond', password: 'password' }, function(err, r, b) {
         if (err) throw err;
-	});
+    });
     
 *Example response body:*
 
@@ -121,18 +225,18 @@ one user will be returned in the data array.
         ]
     }
 
-**client.users.post(user, cb)**
+**client.tenant(tenant).users.post(user, cb)**
 
 Equivalent to a `POST: /users` request.
 
-    var sholmes = {
-        firstName: 'Sherlock',
-        lastName: 'Holmes',
-        username: 'sholmes',
-        password: 'password'
+    var bond = {
+        firstName: 'James',
+        lastName: 'Bond',
+        username: 'thespywholovedyou',
+        password: 'IAm007'
     };
     
-    client.users.post(sholmes, function(err, resp, body) {
+    client.tenant('mi6').users.post(bond, function(err, resp, body) {
         if (err) throw err;
     });
 
@@ -145,11 +249,11 @@ Equivalent to a `POST: /users` request.
         }
     }
 
-**client.users.id(userId).get(cb)**
+**client.tenant(tenant).users.id(userId).get(cb)**
 
 Equivalent to a `GET: /users/:id` request.
 
-    client.users.id(userId).get(function(err, resp, body) {
+    client.tenant('mi6').users.id(userId).get(function(err, resp, body) {
         if (err) throw err;
     });
 
@@ -157,25 +261,25 @@ Equivalent to a `GET: /users/:id` request.
 
     {
         data: {
-            firstName: 'Sherlock',
-            lastName: 'Holmes',
-            username: 'sholmes',
+            firstName: 'James',
+            lastName: 'Bond',
+            username: 'thespywholovedyou',
             _id: '4f0b06b343e63a100400009b'
         }
     }
     
-**client.users.id(userId).put(user, cb)**
+**client.tenant(tenant).users.id(userId).put(user, cb)**
 
 Equivalent to a `PUT: /users/:id` request.
 
-    var sholmes = {
-        firstName: 'Sherlock',
-        lastName: 'Holmes',
-        username: 'sholmes',
-        password: 'password'
+    var bond = {
+        firstName: 'James',
+        lastName: 'Bond',
+        username: 'jbond',
+        password: 'IAm007'
     };
     
-    client.users.id(userId).put(sholmes, function(err, resp, body) {
+    client.tenant('mi6').users.id(userId).put(bond, function(err, resp, body) {
         if (err) throw err;
     });
 
@@ -185,11 +289,11 @@ Equivalent to a `PUT: /users/:id` request.
         data: 'none'
     }
     
-**client.users.id(userId).delete(cb)**
+**client.tenant(tenant).users.id(userId).delete(cb)**
 
 Equivalent to a `DELETE: /users/:id` request.
     
-    client.users.id(userId).delete(function(err, resp, body) {
+    client.tenant('mi6').users.id(userId).delete(function(err, resp, body) {
         if (err) throw err;
     });
 
@@ -198,6 +302,8 @@ Equivalent to a `DELETE: /users/:id` request.
     {
         data: 'none'
     }
+
+####Event Methods
 
 **client.events.post(event, cb)**
 
@@ -207,7 +313,7 @@ Equivalent to a `POST: /events` request.
         timestamp: 1327093708463,
         category: 'user',
         data: {
-        	username: 'sholmes',
+        	username: 'jbond',
         	action: 'login'
         },
         deltas: {
@@ -225,6 +331,12 @@ Equivalent to a `POST: /events` request.
         data: 'none'
     }
 
+**client.tenant(tenant).events.post(event, cb)**
+
+Equivalent to a `POST: /events` request.
+
+Note: this method is equivalent to the one above, except that it will POST a tenant-level Event, rather than a
+landlord-level event.
 
 ##Running Tests (for internal developers):
 
