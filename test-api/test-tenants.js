@@ -5,7 +5,8 @@ var assert = require('./helpers/assert'),
 var client = new Client({
 	host: 'localhost',
 	port: 3210,
-	landlord: 'test'
+	landlord: 'test',
+	key: require('fs').readFileSync(__dirname + '/rsa_private.pem')
 });
 
 // for various test cases
