@@ -65,12 +65,14 @@ Importing the API client:
     var Client = require('platform-api-node-client');
     
 API clients are bound to a specific server host and port, and a specific client landlord.  The landlord value should be
-the same value you would provide for the `l` parameter when using the REST API directly.  E.g.,
+the same value you would provide for the `l` parameter when using the REST API directly.  The key value should be the
+private key corresponding with the public key used when defining the landlord. E.g.,
 
     var client = new Client({
         host: 'localhost',
         port: 3000,
-        landlord: 'sparc'
+        landlord: 'sparc',
+        key: require('fs').readFileSync(__dirname + '/rsa_private.pem')
     });
 
 All API methods expect the last parameter to be a callback function.  The callback should be in the form of:
