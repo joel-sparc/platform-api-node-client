@@ -1,7 +1,7 @@
 {
 	"name": "platform-api-node-client",
 	"main": "./lib/client.js",
-	"version": "0.0.2",
+	"version": "0.1.1",
 	"dependencies": {
 		"http-signature": ">=0.9.8",
 		"mocha": "0.3.6"
