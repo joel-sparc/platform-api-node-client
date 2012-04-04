@@ -64,14 +64,14 @@ Importing the API client:
     // nothing special here...
     var Client = require('platform-api-node-client');
     
-API clients are bound to a specific server host and port, and a specific client landlord.  The landlord value should be
-the same value you would provide for the `l` parameter when using the REST API directly.  The key value should be the
-private key corresponding with the public key used when defining the landlord. E.g.,
+API clients are bound to a specific server host and port, and a specific client domain.  The domain value should be
+the same value you would provide for the `d` parameter when using the REST API directly.  The key value should be the
+private key corresponding with the public key used when defining the domain. E.g.,
 
     var client = new Client({
         host: 'localhost',
         port: 3000,
-        landlord: 'sparc',
+        domain: 'sparc',
         key: require('fs').readFileSync(__dirname + '/rsa_private.pem')
     });
 
@@ -338,7 +338,7 @@ Equivalent to a `POST: /events` request.
 Equivalent to a `POST: /events` request.
 
 Note: this method is equivalent to the one above, except that it will POST a tenant-level Event, rather than a
-landlord-level event.
+domain-level event.
 
 ##Running Tests (for internal developers):
 
