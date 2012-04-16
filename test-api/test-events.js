@@ -31,9 +31,36 @@ describe('/events', function() {
 		req.end();
 	});
 
-	describe('(invalid format)', function() {
+	describe('GET:', function() {
+		var resp, body;
 
-		describe('POST:', function() {
+		it('should complete without any errors', function(done) {
+			// temporarily using client.request until client.events is fleshed out
+			client.tenant('test').request({ method: 'GET', path: '/events', query: { category: 'user' } }, function(err, r, b) {
+				assert.ifError(err);
+				resp = r;
+				body = b;
+				done();
+			});
+		});
+
+		it('should return a valid JSON content type', function() {
+			assert.jsonContentType(resp.headers);
+		});
+
+		it('should respond with a 200 status code', function() {
+			assert.strictEqual(resp.statusCode, 200);
+		});
+
+		it('should return a data property with an array value', function() {
+			assert(Array.isArray(body.data));
+		});
+
+	});
+
+	describe('POST:', function() {
+
+		describe('(invalid format)', function() {
 			var resp, body;
 
 			it('should return a 400 status', function(done) {
@@ -61,12 +88,7 @@ describe('/events', function() {
 			});
 		});
 
-	});
-
-
-	describe('(valid format)', function() {
-
-		describe('POST:', function() {
+		describe('(valid format)', function() {
 			var resp, body;
 
 			it('should complete without any errors', function(done) {
