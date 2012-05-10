@@ -35,8 +35,11 @@ describe('/events', function() {
 		var resp, body;
 
 		it('should complete without any errors', function(done) {
-			// temporarily using client.request until client.events is fleshed out
-			client.tenant('test').request({ method: 'GET', path: '/events', query: { category: 'user' } }, function(err, r, b) {
+			var q = {
+				category: 'foo',
+				range: [Date.now() - 86400, Date.now()]
+			};
+			client.tenant('test').events.get(q, function(err, r, b) {
 				assert.ifError(err);
 				resp = r;
 				body = b;
